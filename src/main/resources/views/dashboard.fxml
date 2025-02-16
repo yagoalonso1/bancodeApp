@@ -34,10 +34,6 @@
         <Button text="Ver Historial" 
                 onAction="#irAHistorial"
                 style="-fx-min-width: 200px;"/>
-                
-        <Button text="Configuración" 
-                onAction="#irAConfiguracion"
-                style="-fx-min-width: 200px;"/>
     </VBox>
 
 </AnchorPane>

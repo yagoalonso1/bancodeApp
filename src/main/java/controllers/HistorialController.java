@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.IOException;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -22,7 +23,7 @@ public class HistorialController {
         if (cuenta != null) {
             historialList.getItems().clear();
             for (Operacion operacion : cuenta.getHistorial()) {
-                historialList.getItems().add(operacion.getFecha() + " - " + operacion.getTipo() + ": " + operacion.getCantidad() + "€");
+                historialList.getItems().add(operacion.toString());
             }
         } else {
             historialList.getItems().add("No hay historial disponible.");

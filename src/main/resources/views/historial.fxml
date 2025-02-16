@@ -10,10 +10,12 @@
             fx:controller="controllers.HistorialController"
             prefHeight="500.0" prefWidth="500.0">
 
-    <VBox spacing="15" alignment="CENTER" layoutX="50" layoutY="50">
+    <VBox alignment="CENTER" spacing="10" layoutX="50" layoutY="20" prefWidth="400">
         <Label text="Historial de Operaciones" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-        <ListView fx:id="historialList" prefHeight="300" prefWidth="400"/>
-        <Button fx:id="volverButton" text="Volver al Dashboard" onAction="#volverAlDashboard"/>
+        <ListView fx:id="historialList" prefHeight="400.0"/>
+        <Button text="Volver al Dashboard" 
+                onAction="#volverAlDashboard"
+                style="-fx-min-width: 200px;"/>
     </VBox>
 
 </AnchorPane>
