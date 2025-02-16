@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.RetiroController"
+            prefHeight="500.0" prefWidth="500.0">
+
+    <VBox alignment="CENTER" spacing="10" layoutX="125" layoutY="80">
+        <Label text="Retirar Dinero" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+        <TextField fx:id="cantidadField" promptText="Cantidad a retirar"/>
+        <Button text="Retirar" onAction="#retirarDinero"/>
+        <Button text="Volver" onAction="#volverAlDashboard"/>
+    </VBox>
+
+</AnchorPane>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.RegistroController"
+            prefHeight="500.0" prefWidth="500.0">
+
+    <VBox alignment="CENTER" spacing="10" layoutX="125" layoutY="80">
+        <Label text="Registro de Usuario" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+        <TextField fx:id="nombreField" promptText="Nombre de Usuario"/>
+        <PasswordField fx:id="passwordField" promptText="Contraseña"/>
+        <PasswordField fx:id="confirmPasswordField" promptText="Confirmar Contraseña"/>
+        <TextField fx:id="preguntaField" promptText="¿Cuál es tu color favorito?"/>
+        <TextField fx:id="respuestaField" promptText="Respuesta"/>
+        <Button fx:id="registrarButton" text="Registrarse" onAction="#registrarUsuario"/>
+        <Button fx:id="volverButton" text="Volver al Menú Principal" onAction="#volverAlMenu"/>
+    </VBox>
+
+</AnchorPane>
