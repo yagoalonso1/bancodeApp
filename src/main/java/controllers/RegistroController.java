@@ -15,6 +15,13 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import models.Usuario;
 
+/**
+ * Controlador para la vista de registro de nuevos usuarios.
+ * Gestiona el proceso de registro y validación de datos.
+ * 
+ * @author Yago
+ * @version 1.0
+ */
 public class RegistroController {
     @FXML private TextField nombreField;
     @FXML private PasswordField passwordField;
@@ -22,17 +29,22 @@ public class RegistroController {
     @FXML private Button registrarButton;
     @FXML private Button volverButton;
     @FXML private TextField respuestaField;
-
-    // Lista estática de usuarios
+    
+    /** Lista estática que almacena todos los usuarios registrados */
     private static List<Usuario> usuarios = new ArrayList<>();
 
     /**
-     * Devuelve la lista de usuarios registrados.
+     * Obtiene la lista de usuarios registrados.
+     * @return Lista de usuarios
      */
     public static List<Usuario> getUsuarios() {
         return usuarios;
     }
 
+    /**
+     * Maneja el proceso de registro de un nuevo usuario.
+     * Valida los campos y crea un nuevo usuario si todo es correcto.
+     */
     @FXML
     private void registrarUsuario() {
         String nombre = nombreField.getText();
@@ -55,34 +67,45 @@ public class RegistroController {
             return;
         }
 
-        // Registrar el usuario
         usuarios.add(new Usuario(nombre, password, respuesta));
         mostrarAlerta("Registro Exitoso", "Usuario registrado correctamente.", Alert.AlertType.INFORMATION);
         volverAlMenu();
     }
 
+    /**
+     * Verifica si un usuario ya existe en el sistema.
+     * 
+     * @param nombre Nombre de usuario a verificar
+     * @return true si el usuario existe, false en caso contrario
+     */
     private boolean usuarioExiste(String nombre) {
         return usuarios.stream().anyMatch(u -> u.getNombre().equals(nombre));
     }
 
+    /**
+     * Vuelve a la vista del menú principal.
+     */
     @FXML
     private void volverAlMenu() {
-        cambiarEscena("/views/inicio.fxml");
-    }
-
-    private void cambiarEscena(String ruta) {
         try {
             Stage stage = (Stage) registrarButton.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(ruta));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/inicio.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root, 500, 500);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            mostrarAlerta("Error", "No se pudo cambiar de pantalla.", Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "No se pudo volver al menú principal.", Alert.AlertType.ERROR);
         }
     }
 
+    /**
+     * Muestra una alerta al usuario.
+     * 
+     * @param titulo Título de la alerta
+     * @param mensaje Mensaje de la alerta
+     * @param tipo Tipo de alerta (ERROR, INFORMATION, WARNING)
+     */
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);

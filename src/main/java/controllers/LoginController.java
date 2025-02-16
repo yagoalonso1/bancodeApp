@@ -20,6 +20,13 @@ import models.AppState;
 import models.CuentaBancaria;
 import models.Usuario;
 
+/**
+ * Controlador para la vista de inicio de sesión.
+ * Gestiona la autenticación de usuarios y la recuperación de contraseñas.
+ * 
+ * @author Yago
+ * @version 1.0
+ */
 public class LoginController {
     @FXML private TextField usuarioField;
     @FXML private PasswordField passwordField;
@@ -35,11 +42,19 @@ public class LoginController {
         return RegistroController.getUsuarios();
     }
 
+    /**
+     * Inicializa el controlador.
+     * Se ejecuta automáticamente después de cargar el FXML.
+     */
     @FXML
     private void initialize() {
         System.out.println("LoginController inicializado");
     }
 
+    /**
+     * Maneja el proceso de autenticación del usuario.
+     * Verifica las credenciales y permite el acceso si son correctas.
+     */
     @FXML
     private void autenticarUsuario() {
         System.out.println("Intentando autenticar usuario");
@@ -64,6 +79,12 @@ public class LoginController {
         }
     }
 
+    /**
+     * Busca un usuario en la lista de usuarios registrados.
+     * 
+     * @param nombre Nombre del usuario a buscar
+     * @return Usuario encontrado o null si no existe
+     */
     private Usuario buscarUsuario(String nombre) {
         return RegistroController.getUsuarios().stream()
                 .filter(u -> u.getNombre().equals(nombre))
@@ -71,6 +92,10 @@ public class LoginController {
                 .orElse(null);
     }
 
+    /**
+     * Procesa el inicio de sesión exitoso.
+     * Crea una nueva cuenta si es necesario y navega al dashboard.
+     */
     private void loginExitoso() {
         if (AppState.getInstance().getCuentaActual() == null) {
             AppState.getInstance().setCuentaActual(new CuentaBancaria(1000.0));
@@ -79,12 +104,18 @@ public class LoginController {
         mostrarAlerta("Éxito", "Inicio de sesión exitoso.", Alert.AlertType.INFORMATION);
     }
 
+    /**
+     * Vuelve a la vista del menú principal.
+     */
     @FXML
     private void volverAlMenu() {
         System.out.println("Volviendo al menú principal");
         cambiarEscena("/views/inicio.fxml");
     }
 
+    /**
+     * Muestra el diálogo de recuperación de contraseña.
+     */
     @FXML
     private void mostrarRecuperacionPassword() {
         System.out.println("Mostrando recuperación de contraseña");
@@ -124,18 +155,27 @@ public class LoginController {
         }
     }
 
+    /**
+     * Procesa la recuperación de contraseña.
+     * 
+     * @param usuario Nombre de usuario
+     * @param respuesta Respuesta a la pregunta de seguridad
+     */
     private void recuperarPassword(String usuario, String respuesta) {
         Usuario usuarioEncontrado = buscarUsuario(usuario);
         if (usuarioEncontrado != null && usuarioEncontrado.verificarRespuestaSeguridad(respuesta)) {
-            mostrarAlerta("Contraseña Recuperada", 
-                         "Tu contraseña es: " + usuarioEncontrado.getPassword(), 
-                         Alert.AlertType.INFORMATION);
+            mostrarAlerta("Recuperación Exitosa", "Su contraseña es: " + usuarioEncontrado.getPassword(), Alert.AlertType.INFORMATION);
             dialogStage.close();
         } else {
             mostrarAlerta("Error", "Usuario o respuesta incorrectos.", Alert.AlertType.ERROR);
         }
     }
 
+    /**
+     * Cambia la escena actual por una nueva.
+     * 
+     * @param ruta Ruta del archivo FXML a cargar
+     */
     private void cambiarEscena(String ruta) {
         try {
             Stage stage = null;
@@ -160,6 +200,13 @@ public class LoginController {
         }
     }
 
+    /**
+     * Muestra una alerta al usuario.
+     * 
+     * @param titulo Título de la alerta
+     * @param mensaje Mensaje de la alerta
+     * @param tipo Tipo de alerta (ERROR, INFORMATION, WARNING)
+     */
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);

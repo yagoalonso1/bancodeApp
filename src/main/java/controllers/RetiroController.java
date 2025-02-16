@@ -11,16 +11,32 @@ import javafx.stage.Stage;
 import models.AppState;
 import models.CuentaBancaria;
 
+/**
+ * Controlador para la vista de retiro de dinero.
+ * Maneja las operaciones de retiro y la interfaz de usuario relacionada.
+ * 
+ * @author Yago
+ * @version 1.0
+ */
 public class RetiroController {
     @FXML private TextField cantidadField;
     private CuentaBancaria cuenta;
+    /** Umbral a partir del cual se aplica comisión (en EUR) */
     private static final double UMBRAL_COMISION = 200.0;
 
+    /**
+     * Inicializa el controlador.
+     * Se ejecuta automáticamente después de cargar el FXML.
+     */
     @FXML
     private void initialize() {
         cuenta = AppState.getInstance().getCuentaActual();
     }
 
+    /**
+     * Maneja el proceso de retiro de dinero.
+     * Verifica la cantidad, aplica comisiones si corresponde y actualiza el saldo.
+     */
     @FXML
     private void realizarRetiro() {
         try {
@@ -52,6 +68,10 @@ public class RetiroController {
         }
     }
 
+    /**
+     * Vuelve a la vista del dashboard.
+     * @throws IOException Si hay un error al cargar la vista del dashboard
+     */
     @FXML
     private void volverAlDashboard() throws IOException {
         Stage stage = (Stage) cantidadField.getScene().getWindow();
@@ -60,6 +80,12 @@ public class RetiroController {
         stage.setScene(scene);
     }
 
+    /**
+     * Muestra una alerta al usuario.
+     * @param titulo Título de la alerta
+     * @param mensaje Mensaje de la alerta
+     * @param tipo Tipo de alerta (ERROR, INFORMATION, WARNING)
+     */
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);

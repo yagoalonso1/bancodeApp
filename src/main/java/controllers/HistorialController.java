@@ -10,15 +10,30 @@ import javafx.stage.Stage;
 import models.CuentaBancaria;
 import models.Operacion;
 
+/**
+ * Controlador para la vista del historial de operaciones.
+ * Muestra todas las operaciones realizadas en la cuenta.
+ * 
+ * @author Yago
+ * @version 1.0
+ */
 public class HistorialController {
     @FXML private ListView<String> historialList;
     private CuentaBancaria cuenta;
 
+    /**
+     * Establece la cuenta bancaria y carga su historial.
+     * 
+     * @param cuenta CuentaBancaria cuyo historial se mostrará
+     */
     public void setCuenta(CuentaBancaria cuenta) {
         this.cuenta = cuenta;
         cargarHistorial();
     }
 
+    /**
+     * Carga el historial de operaciones en la lista.
+     */
     private void cargarHistorial() {
         if (cuenta != null) {
             historialList.getItems().clear();
@@ -30,6 +45,9 @@ public class HistorialController {
         }
     }
 
+    /**
+     * Vuelve a la vista del dashboard.
+     */
     @FXML
     private void volverAlDashboard() {
         try {
