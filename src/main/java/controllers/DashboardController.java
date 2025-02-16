@@ -1,11 +1,11 @@
 package controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Alert;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import java.io.IOException;
@@ -23,14 +23,14 @@ public class DashboardController {
     private void initialize() {
         // Obtener la cuenta del estado de la aplicación
         cuenta = AppState.getInstance().getCuentaActual();
-
+        
         // Configurar el ComboBox de divisas
         divisaComboBox.getItems().addAll(Divisa.values());
         divisaComboBox.setValue(cuenta.getDivisaActual());
-
+        
         // Añadir listener para cambios en la divisa
         divisaComboBox.setOnAction(e -> cambiarDivisa());
-
+        
         actualizarSaldo();
     }
 
@@ -82,7 +82,7 @@ public class DashboardController {
         alert.showAndWait();
     }
 
-    // Métodos para cambiar de vista (Retiro, Depósito, Historial, Configuración)
+    // Métodos para cambiar de vista (Retiro, Depósito, Historial)
     @FXML
     private void irADeposito() {
         cambiarVista("/views/deposito.fxml");
@@ -94,23 +94,36 @@ public class DashboardController {
     }
 
     @FXML
-    private void irAConfiguracion() {
-        cambiarVista("/views/configuracion.fxml");
-    }
-
-    @FXML
     private void irAHistorial() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/historial.fxml"));
             Scene scene = new Scene(loader.load(), 500, 500);
-
+            
             HistorialController historialController = loader.getController();
             historialController.setCuenta(cuenta);
-
+            
             Stage stage = (Stage) saldoLabel.getScene().getWindow();
             stage.setScene(scene);
         } catch (IOException e) {
             mostrarAlerta("Error", "No se pudo cargar la vista de historial", Alert.AlertType.ERROR);
+        }
+    }
+
+    @FXML
+    private void cerrarSesion() {
+        try {
+            // Reiniciar el estado de la aplicación
+            AppState.getInstance().setCuentaActual(null);
+            
+            // Volver a la pantalla de inicio
+            Stage stage = (Stage) saldoLabel.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/inicio.fxml"));
+            Scene scene = new Scene(loader.load(), 500, 500);
+            stage.setScene(scene);
+            
+            mostrarAlerta("Sesión Cerrada", "Has cerrado sesión correctamente", Alert.AlertType.INFORMATION);
+        } catch (IOException e) {
+            mostrarAlerta("Error", "No se pudo cerrar la sesión", Alert.AlertType.ERROR);
         }
     }
 

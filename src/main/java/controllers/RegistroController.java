@@ -3,6 +3,7 @@ package controllers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,7 +21,6 @@ public class RegistroController {
     @FXML private PasswordField confirmPasswordField;
     @FXML private Button registrarButton;
     @FXML private Button volverButton;
-    @FXML private TextField preguntaField;
     @FXML private TextField respuestaField;
 
     // Lista estática de usuarios
@@ -58,7 +58,6 @@ public class RegistroController {
         // Registrar el usuario
         usuarios.add(new Usuario(nombre, password, respuesta));
         mostrarAlerta("Registro Exitoso", "Usuario registrado correctamente.", Alert.AlertType.INFORMATION);
-
         volverAlMenu();
     }
 

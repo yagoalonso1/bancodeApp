@@ -34,6 +34,10 @@
         <Button text="Ver Historial" 
                 onAction="#irAHistorial"
                 style="-fx-min-width: 200px;"/>
+
+        <Button text="Cerrar Sesión" 
+                onAction="#cerrarSesion"
+                style="-fx-min-width: 200px; -fx-background-color: #ff4444; -fx-text-fill: white;"/>
     </VBox>
 
 </AnchorPane>

@@ -12,13 +12,13 @@
             fx:controller="controllers.LoginController"
             prefHeight="500.0" prefWidth="500.0">
 
-    <VBox alignment="CENTER" spacing="10" layoutX="125" layoutY="80">
-        <Label text="Iniciar Sesión" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-        <TextField fx:id="usuarioField" promptText="Nombre de Usuario"/>
+    <VBox alignment="CENTER" spacing="15" layoutX="125" layoutY="80">
+        <Label text="Iniciar Sesión" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+        <TextField fx:id="usuarioField" promptText="Usuario"/>
         <PasswordField fx:id="passwordField" promptText="Contraseña"/>
-        <Button fx:id="loginButton" text="Iniciar Sesión" onAction="#autenticarUsuario"/>
-        <Button fx:id="olvidoPasswordButton" text="¿Olvidó su contraseña?" onAction="#mostrarRecuperacion"/>
-        <Button fx:id="volverButton" text="Volver al Menú Principal" onAction="#volverAlMenu"/>
+        <Button fx:id="loginButton" text="Iniciar Sesión" onAction="#autenticarUsuario" style="-fx-min-width: 200px;"/>
+        <Button fx:id="olvidoPasswordButton" text="¿Olvidaste tu contraseña?" onAction="#mostrarRecuperacionPassword" style="-fx-min-width: 200px;"/>
+        <Button fx:id="volverButton" text="Volver" onAction="#volverAlMenu" style="-fx-min-width: 200px;"/>
     </VBox>
 
 </AnchorPane>

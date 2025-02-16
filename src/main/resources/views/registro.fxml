@@ -12,15 +12,15 @@
             fx:controller="controllers.RegistroController"
             prefHeight="500.0" prefWidth="500.0">
 
-    <VBox alignment="CENTER" spacing="10" layoutX="125" layoutY="80">
-        <Label text="Registro de Usuario" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-        <TextField fx:id="nombreField" promptText="Nombre de Usuario"/>
+    <VBox alignment="CENTER" spacing="15" layoutX="125" layoutY="80">
+        <Label text="Registro de Usuario" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+        <TextField fx:id="nombreField" promptText="Nombre de usuario"/>
         <PasswordField fx:id="passwordField" promptText="Contraseña"/>
-        <PasswordField fx:id="confirmPasswordField" promptText="Confirmar Contraseña"/>
-        <TextField fx:id="preguntaField" promptText="¿Cuál es tu color favorito?"/>
+        <PasswordField fx:id="confirmPasswordField" promptText="Confirmar contraseña"/>
+        <Label text="¿Cómo se llamaba tu mejor amigo de la infancia?"/>
         <TextField fx:id="respuestaField" promptText="Respuesta"/>
         <Button fx:id="registrarButton" text="Registrarse" onAction="#registrarUsuario"/>
-        <Button fx:id="volverButton" text="Volver al Menú Principal" onAction="#volverAlMenu"/>
+        <Button fx:id="volverButton" text="Volver" onAction="#volverAlMenu"/>
     </VBox>
 
 </AnchorPane>

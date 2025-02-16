@@ -2,6 +2,7 @@ package controllers;
 
 import java.io.IOException;
 import java.util.List;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -41,82 +42,78 @@ public class LoginController {
 
     @FXML
     private void autenticarUsuario() {
+        System.out.println("Intentando autenticar usuario");
         String usuarioIngresado = usuarioField.getText();
         String passwordIngresado = passwordField.getText();
 
-        // Validación de campos vacíos
         if (usuarioIngresado.isEmpty() || passwordIngresado.isEmpty()) {
             mostrarAlerta("Error", "Por favor, ingrese usuario y contraseña.", Alert.AlertType.ERROR);
             return;
         }
 
-        // Intentar con usuario admin (usuario por defecto)
         if ("admin".equals(usuarioIngresado) && "1234".equals(passwordIngresado)) {
-            if (AppState.getInstance().getCuentaActual() == null) {
-                AppState.getInstance().setCuentaActual(new CuentaBancaria(1000.0));
-            }
-            cambiarEscena("/views/dashboard.fxml");
+            loginExitoso();
             return;
         }
 
-        // Verificar con los usuarios registrados
         Usuario usuarioEncontrado = buscarUsuario(usuarioIngresado);
         if (usuarioEncontrado != null && usuarioEncontrado.autenticar(passwordIngresado)) {
-            if (AppState.getInstance().getCuentaActual() == null) {
-                AppState.getInstance().setCuentaActual(new CuentaBancaria(1000.0));
-            }
-            cambiarEscena("/views/dashboard.fxml");
+            loginExitoso();
         } else {
-            mostrarAlerta("Error de Autenticación", "Usuario o contraseña incorrectos.", Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "Usuario o contraseña incorrectos.", Alert.AlertType.ERROR);
         }
     }
 
     private Usuario buscarUsuario(String nombre) {
-        List<Usuario> usuarios = RegistroController.getUsuarios();
-
-        if (usuarios == null || usuarios.isEmpty()) {
-            return null; // No hay usuarios registrados
-        }
-
-        return usuarios.stream()
+        return RegistroController.getUsuarios().stream()
                 .filter(u -> u.getNombre().equals(nombre))
                 .findFirst()
                 .orElse(null);
     }
 
+    private void loginExitoso() {
+        if (AppState.getInstance().getCuentaActual() == null) {
+            AppState.getInstance().setCuentaActual(new CuentaBancaria(1000.0));
+        }
+        cambiarEscena("/views/dashboard.fxml");
+        mostrarAlerta("Éxito", "Inicio de sesión exitoso.", Alert.AlertType.INFORMATION);
+    }
+
     @FXML
     private void volverAlMenu() {
+        System.out.println("Volviendo al menú principal");
         cambiarEscena("/views/inicio.fxml");
     }
 
     @FXML
-    private void mostrarRecuperacion() {
+    private void mostrarRecuperacionPassword() {
+        System.out.println("Mostrando recuperación de contraseña");
         try {
-            // Crear un diálogo emergente para recuperación de contraseña
             dialogStage = new Stage();
+            dialogStage.setTitle("Recuperar Contraseña");
+
             VBox dialogVbox = new VBox(10);
             dialogVbox.setAlignment(Pos.CENTER);
             dialogVbox.setPadding(new Insets(20));
 
-            TextField usuarioRecuperacion = new TextField();
-            usuarioRecuperacion.setPromptText("Nombre de Usuario");
+            Label preguntaLabel = new Label("¿Cómo se llamaba tu mejor amigo de la infancia?");
+            TextField usuarioField = new TextField();
+            usuarioField.setPromptText("Usuario");
             TextField respuestaField = new TextField();
-            respuestaField.setPromptText("Respuesta de seguridad");
+            respuestaField.setPromptText("Respuesta");
 
-            Label preguntaLabel = new Label("¿Cuál es tu color favorito?");
             Button recuperarButton = new Button("Recuperar Contraseña");
-
             recuperarButton.setOnAction(e -> recuperarPassword(
-                    usuarioRecuperacion.getText(),
-                    respuestaField.getText()
+                usuarioField.getText(), 
+                respuestaField.getText()
             ));
 
             dialogVbox.getChildren().addAll(
-                    new Label("Recuperación de Contraseña"),
-                    usuarioRecuperacion,
-                    preguntaLabel,
-                    respuestaField,
-                    recuperarButton
+                new Label("Ingrese su usuario:"),
+                usuarioField,
+                preguntaLabel,
+                respuestaField,
+                recuperarButton
             );
 
             Scene dialogScene = new Scene(dialogVbox, 300, 250);
@@ -129,9 +126,10 @@ public class LoginController {
 
     private void recuperarPassword(String usuario, String respuesta) {
         Usuario usuarioEncontrado = buscarUsuario(usuario);
-
         if (usuarioEncontrado != null && usuarioEncontrado.verificarRespuestaSeguridad(respuesta)) {
-            mostrarAlerta("Recuperación Exitosa", "Su contraseña es: " + usuarioEncontrado.getPassword(), Alert.AlertType.INFORMATION);
+            mostrarAlerta("Contraseña Recuperada", 
+                         "Tu contraseña es: " + usuarioEncontrado.getPassword(), 
+                         Alert.AlertType.INFORMATION);
             dialogStage.close();
         } else {
             mostrarAlerta("Error", "Usuario o respuesta incorrectos.", Alert.AlertType.ERROR);
@@ -140,10 +138,15 @@ public class LoginController {
 
     private void cambiarEscena(String ruta) {
         try {
-            Stage stage = obtenerStageActual();
-            if (stage == null) {
-                mostrarAlerta("Error", "No se encontró la ventana activa.", Alert.AlertType.ERROR);
-                return;
+            Stage stage = null;
+            if (loginButton != null) {
+                stage = (Stage) loginButton.getScene().getWindow();
+            } else if (volverButton != null) {
+                stage = (Stage) volverButton.getScene().getWindow();
+            } else if (usuarioField != null) {
+                stage = (Stage) usuarioField.getScene().getWindow();
+            } else {
+                stage = (Stage) Stage.getWindows().filtered(window -> window.isShowing()).get(0);
             }
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource(ruta));
@@ -152,26 +155,8 @@ public class LoginController {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            mostrarAlerta("Error", "No se pudo cambiar de pantalla.", Alert.AlertType.ERROR);
-        }
-    }
-
-    /**
-     * Obtiene la ventana actual para cambiar de escena de forma segura.
-     */
-    private Stage obtenerStageActual() {
-        try {
-            if (loginButton != null) {
-                return (Stage) loginButton.getScene().getWindow();
-            } else if (volverButton != null) {
-                return (Stage) volverButton.getScene().getWindow();
-            } else if (usuarioField != null) {
-                return (Stage) usuarioField.getScene().getWindow();
-            } else {
-                return (Stage) Stage.getWindows().filtered(window -> window.isShowing()).get(0);
-            }
-        } catch (Exception e) {
-            return null;
+            System.err.println("Error al cambiar de escena: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -182,5 +167,4 @@ public class LoginController {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
-
 }

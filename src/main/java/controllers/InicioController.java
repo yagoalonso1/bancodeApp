@@ -1,12 +1,13 @@
 package controllers;
 
+import java.io.IOException;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.scene.control.Button;
-import java.io.IOException;
+import javafx.stage.Stage;
 
 public class InicioController {
     @FXML
@@ -35,23 +36,10 @@ public class InicioController {
 
     private void cambiarEscena(String ruta) {
         try {
-            // Obtener el Stage actual desde cualquiera de los botones
-            Stage stage = null;
-            if (loginButton != null) {
-                stage = (Stage) loginButton.getScene().getWindow();
-            } else if (registroButton != null) {
-                stage = (Stage) registroButton.getScene().getWindow();
-            } else {
-                // Intenta obtener la ventana activa de otra manera
-                stage = (Stage) Stage.getWindows().filtered(window -> window.isShowing()).get(0);
-            }
-
-            // Cargar el nuevo FXML
+            Stage stage = (Stage) loginButton.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource(ruta));
             Parent root = loader.load();
             Scene scene = new Scene(root, 500, 500);
-
-            // Establecer la nueva escena
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
