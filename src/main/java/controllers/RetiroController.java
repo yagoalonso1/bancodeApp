@@ -1,18 +1,20 @@
 package controllers;
 
+import java.io.IOException;
+
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import java.io.IOException;
-import models.CuentaBancaria;
 import models.AppState;
+import models.CuentaBancaria;
 
 public class RetiroController {
     @FXML private TextField cantidadField;
     private CuentaBancaria cuenta;
+    private static final double UMBRAL_COMISION = 200.0;
 
     @FXML
     private void initialize() {
@@ -20,33 +22,34 @@ public class RetiroController {
     }
 
     @FXML
-    private void retirarDinero() {
+    private void realizarRetiro() {
         try {
             double cantidad = Double.parseDouble(cantidadField.getText());
+            
+            // Convertir la cantidad a EUR para mostrar advertencia de comisión
+            double cantidadEnEUR = cuenta.getDivisaActual().convertirAEUR(cantidad);
+            
+            if (cantidadEnEUR >= UMBRAL_COMISION) {
+                Alert alertaComision = new Alert(Alert.AlertType.WARNING);
+                alertaComision.setTitle("Aviso de Comisión");
+                alertaComision.setHeaderText(null);
+                alertaComision.setContentText("Se aplicará una comisión del 2% por retirar más de 200€");
+                alertaComision.showAndWait();
+            }
 
-            if (cantidad > 0) {
-                if (cuenta != null && cuenta.retirar(cantidad)) {
-                    mostrarAlerta("Retiro Exitoso", 
-                                  "Has retirado: " + cantidad + " " + 
-                                  cuenta.getDivisaActual().getSimbolo(), 
-                                  Alert.AlertType.INFORMATION);
-                    volverAlDashboard();
-                } else {
-                    mostrarAlerta("Error", "Saldo insuficiente.", Alert.AlertType.ERROR);
-                }
+            if (cuenta.retirar(cantidad)) {
+                mostrarAlerta("Retiro Exitoso", 
+                    "Retiro realizado correctamente\nNuevo saldo: " + cuenta.getSaldoFormateado(), 
+                    Alert.AlertType.INFORMATION);
+                volverAlDashboard();
             } else {
-                mostrarAlerta("Error", "Ingrese una cantidad válida.", Alert.AlertType.ERROR);
+                mostrarAlerta("Error", "Saldo insuficiente para realizar el retiro", Alert.AlertType.ERROR);
             }
         } catch (NumberFormatException e) {
-            mostrarAlerta("Error", "Por favor ingrese un número válido.", Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "Por favor ingrese un número válido", Alert.AlertType.ERROR);
         } catch (IOException e) {
-            mostrarAlerta("Error", "No se pudo cambiar de pantalla. Inténtelo de nuevo.", Alert.AlertType.ERROR);
-            e.printStackTrace();
-        } catch (Exception e) {
-            mostrarAlerta("Error", "Ocurrió un error inesperado. Contacte con soporte.", Alert.AlertType.ERROR);
-            e.printStackTrace();
+            mostrarAlerta("Error", "Error al volver al dashboard", Alert.AlertType.ERROR);
         }
-
     }
 
     @FXML
@@ -60,7 +63,8 @@ public class RetiroController {
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
-        alert.setHeaderText(mensaje);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
         alert.showAndWait();
     }
 }
